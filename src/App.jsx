@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useFetch } from './hooks/useFetch';
 
 // guardando a url do JSON-SERVER
-const url = "http://localhost:3000/products"
+const url = ""
 
 import './App.css'
 
@@ -9,20 +10,23 @@ function App() {
   // 1 - resgatando dados
   const [products, setProduct] = useState([]); //state para guardarmos os dados da requisição
 
-  useEffect(() => {
+  // 4 - custom hook
+  const { data: items, httpConfig, loading, error } = useFetch(url);
 
-    async function getData() {
-      const res = await fetch(url)
+  // useEffect(() => {
 
-      const data = await res.json()
+  //   async function getData() {
+  //     const res = await fetch(url)
 
-      console.log(data)
+  //     const data = await res.json()
 
-      setProduct(data)
-    }
+  //     console.log(data)
 
-    getData();
-  }, []); //executando o useEffect apenas quando a aplicação for iniciada
+  //     setProduct(data)
+  //   }
+
+  //   getData();
+  // }, []); //executando o useEffect apenas quando a aplicação for iniciada
 
   // 2 - envio de dados
   const [name, setName] = useState("")
@@ -30,37 +34,45 @@ function App() {
 
    const handleSubmit = async (e) => {
     e.preventDefault()
-
+    
     const product = {
       name, 
       price
     };
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(product)
-    });
+    // 5 - refatorando post 
+    httpConfig(product, "POST");
 
-    // 3 - CARREGAMENTO DINAMICO
-    const addedProduct = await res.json();
+    // const res = await fetch(url, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(product)
+    // });
 
-    // to pegando o valor que já tinha e adicionando o novo
-    setProduct((prevDefault) => [...prevDefault, addedProduct]);
+    // // 3 - CARREGAMENTO DINAMICO
+    // const addedProduct = await res.json();
+
+    // // to pegando o valor que já tinha e adicionando o novo
+    // setProduct((prevDefault) => [...prevDefault, addedProduct]);
 
   };
 
   return (
     <div className='App'>
       <h1>HTTP em React</h1>
+      {/* 6 - loading */}
+      {loading && <p>Carregando...</p>}
 
+      {/* 7 - tratando erro */}
+      {error && <p>{error}</p>}
       {/* 1 - resgate de dados */}
       <ul>
 
         {/* exebindo os dados que estão guardados no state products (array) utilizando o map  */}
-        {products.map((product) => (
+        {items &&
+        items.map((product) => (
           <li key={product.id}>
             {product.name} - R${product.price}
           </li>
@@ -80,7 +92,10 @@ function App() {
             <input type="text" value={price } onChange={(e) => setPrice(e.target.value)}/>
           </label>
 
-          <input type="submit" value="Enviar"/>
+          {/* <input type="submit" value="Enviar"/> */}
+          {/* 7 - loading post */}
+          {loading && <input type='submit' disabled value="Aguarde" /> }
+          {!loading && <input type='submit' value="Criar"/>}
         </form>
       </div>
     </div>

@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 
 // 1 - configurando router
-import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate} from 'react-router-dom'
 
 import Contact from './routes/Contact.jsx'
 
@@ -16,6 +16,12 @@ import Home from './routes/Home.jsx'
 
 // 7 - rota dinamica 
 import Product from './components/Product.jsx'
+
+// 8 - nested route (rotas aninhadas)
+import Info from './routes/Info.jsx'
+
+// 9 - search
+import Search from './routes/Search.jsx'
 
 // um array de objeto onde vamos definir as paginas
 const router = createBrowserRouter ([
@@ -36,6 +42,21 @@ const router = createBrowserRouter ([
       {
         path: "products/:id",
         element: <Product />
+      },
+      // 8 - nested route (rotas aninhadas)
+      {
+        path: "products/:id/info",
+        element: <Info />
+      },
+      // 9 - search
+      {
+        path: "search",
+        element: <Search />
+      },
+      // 10 - redirect
+      {
+        path: "teste",
+        element: <Navigate to="/" />
       }
     ]
   },

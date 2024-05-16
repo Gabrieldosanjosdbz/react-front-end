@@ -6,6 +6,8 @@ import { useContext } from "react"
 import { SomeContext } from '../components/HookUseContext';
 import HookUseRef from "../components/HookUseRef";
 import HookuseCallback from "../components/HookuseCallback";
+import HookUseMemo from "../components/HookUseMemo";
+import HookUseLayoutEffect from "../components/HookUseLayoutEffect";
 
 const Home = () => {
   const {oi, setOi} = useContext(SomeContext);
@@ -23,6 +25,8 @@ const Home = () => {
       <hr />
       <HookUseRef />
       <HookuseCallback />
+      <HookUseMemo />
+      <HookUseLayoutEffect /> 
     </div>
   )
 }
